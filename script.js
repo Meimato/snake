@@ -26,7 +26,6 @@ function init() {
   const canvas = document.createElement("canvas");
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
-  canvas.style.border = "1px solid black";
 
   document.body.appendChild(canvas);
 
