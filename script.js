@@ -23,13 +23,9 @@ window.onload = function () {
 };
 
 function init() {
-  const canvas = document.createElement("canvas");
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-
-  document.body.appendChild(canvas);
-
+  const canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
+  ctx.scale(0.5, 0.5);
 }
 
 function drawGame() {
