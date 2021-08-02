@@ -7,6 +7,10 @@ let delay = 100;
 let ctx;
 let snake;
 let apple;
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
 
 window.onload = function () {
   init();
@@ -24,6 +28,9 @@ window.onload = function () {
 
 function init() {
   const canvas = document.getElementById("canvas");
+  const overlay = document.getElementById("overlay");
+  overlay.addEventListener("touchstart", doTouchStart, false);
+  overlay.addEventListener("touchend", doTouchEnd, false);
   ctx = canvas.getContext("2d");
   ctx.scale(0.5, 0.5);
 }
@@ -52,6 +59,36 @@ function restartGame() {
   apple.createApple();
 }
 
+function calculateSwipe() {
+  if (Math.abs(touchEndX - touchStartX) > Math.abs(touchEndY - touchStartY)) {
+    if (touchEndX < touchStartX) {
+      snake.changeDirection("left");
+    } else {
+      snake.changeDirection("right");
+    }
+  } else {
+    if (touchEndY < touchStartY) {
+      snake.changeDirection("up");
+    } else {
+      snake.changeDirection("down");
+    }
+  }
+}
+
+function doTouchStart(event) {
+  event.preventDefault();
+  touchStartX = event.changedTouches[0].screenX;
+  touchStartY = event.changedTouches[0].screenY;
+}
+
+function doTouchEnd(event) {
+  event.preventDefault();
+  touchEndX = event.changedTouches[0].screenX;
+  touchEndY = event.changedTouches[0].screenY;
+
+  calculateSwipe();
+}
+
 function Apple(coordinates) {
   this.coordinates = coordinates;
 
@@ -77,16 +114,17 @@ function Apple(coordinates) {
   };
 
   this.createApple = function () {
-    this.coordinates[0] = Math.floor(
-      Math.random() * (canvasWidth / blockSize)
-    );
+    this.coordinates[0] = Math.floor(Math.random() * (canvasWidth / blockSize));
     this.coordinates[1] = Math.floor(
       Math.random() * (canvasHeight / blockSize)
     );
 
     for (let index = 0; index < snake.body.length; index++) {
       const element = snake.body[index];
-      if (this.coordinates[0] == element[0] && this.coordinates[1] == element[1]) {
+      if (
+        this.coordinates[0] == element[0] &&
+        this.coordinates[1] == element[1]
+      ) {
         this.createApple();
       }
     }
@@ -199,8 +237,8 @@ document.onkeydown = function (e) {
       newDirection = "up";
       break;
     case " ":
-        restartGame();
-        break;
+      restartGame();
+      break;
     default:
       return;
   }
