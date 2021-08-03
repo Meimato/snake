@@ -29,8 +29,16 @@ window.onload = function () {
 function init() {
   const canvas = document.getElementById("canvas");
   const overlay = document.getElementById("overlay");
-  overlay.addEventListener("touchstart", doTouchStart, false);
-  overlay.addEventListener("touchend", doTouchEnd, false);
+  // if ( "ontouchstart" in document.documentElement )
+  // cambia la width dell'overlay a 9900px e l'height a 990px
+
+  overlay.addEventListener("touchstart", doTouchStart);
+  overlay.addEventListener("touchend", doTouchEnd);
+  if ('ontouchstart' in document.documentElement) {
+    overlay.classList.add("touch");
+  } else {
+    overlay.classList.add("no-touch");
+  }
   ctx = canvas.getContext("2d");
   ctx.scale(0.5, 0.5);
 }
